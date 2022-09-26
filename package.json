@@ -7,8 +7,9 @@
     "test": "jest",
     "build": "tsc",
     "lint": "eslint . --ext .ts,.js --fix",
-    "start": "tsc && node dist/index.js",
-    "watch-and-run": "nodemon -e ts --exec \"npm run start\""
+    "start": "tsc && babel-node dist/src/index.js",
+    "watch-and-run": "nodemon -e ts --exec \"npm run start\"",
+    "dev": "babel-node dist/src/index.js"
   },
   "author": "Patient Studio",
   "license": "UNLICENSED",

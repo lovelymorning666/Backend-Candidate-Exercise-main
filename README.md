@@ -1,4 +1,4 @@
-# Patient Studio, Backend Candidate Exercise 
+# Patient Studio, Backend Candidate Exercise
 
 This repo contains a brief assessment of Javascript and Typescript for backend engineering candidates applying to Patient Studio. The goal is to take a look at the `/src/index.ts` file that contains a number of functions in it. Each function has its own problem: some could have performance improvments, others need to be implemented.
 
@@ -8,29 +8,30 @@ The objective of this exercise is to refactor the functions in a way the you fee
 
 Some principles to keep in mind that might be helpful:
 
-* Performance
-* Readability
-* Scalability
-* DRY principles
-* Proper abstraction
-* Functional/Declarative programming principles (optional but encouraged)
-* Formatting and linting
-* Leverage native language constructs
-* Testability of code/functions
-* Proper typing
-* Comments as necessary
-* Error checking and resilience
+- Performance
+- Readability
+- Scalability
+- DRY principles
+- Proper abstraction
+- Functional/Declarative programming principles (optional but encouraged)
+- Formatting and linting
+- Leverage native language constructs
+- Testability of code/functions
+- Proper typing
+- Comments as necessary
+- Error checking and resilience
 
 Please remember that the goal is not to find the perfect solution, but to reach a working solution and help us understand your programming and debugging style. We encourage commenting your code to expalin things in place, feel free to even include a notes file).
 
-
 ## Running
+
 This template comes packaged with a `start` and `watch-and-run` NPM script.
 `npm start` - TSC compile and run the index.ts file in non-watch mode.
 `npm run watch-and-run` - TSC compile and run your index.js in watch mode which will recompile and restart the server on file changes.
 `npm test` - Run TSC and execute all `*.specs.ts` files.
 
 ## Submitting Your Work
+
 1. Create a new repository on GitHub and add the original fles
 2. Add `morficus` as repository collaborator
 3. Createa new branch off `main` and call it `improvments`

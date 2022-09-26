@@ -17,19 +17,25 @@ export async function returnSiteTitles() {
     'https://www.neowin.net/'
   ]
 
-  const titles = []
+  // generate promises according to each site request for getting titles
+  const requestPromises = urls.map(async (url: string) => {
+    try {
+      const response = await fetch(url)
+      // when response is not successful, return empty string
+      if (response.status !== 200) return ''
 
-  for (const url of urls) {
-    const response = await fetch(url, { method: 'GET' })
-
-    if (response.status === 200) {
       const data = await response.text()
       const match = data.match(/<title>(.*?)<\/title>/)
-      if (match?.length) {
-        titles.push(match[1])
-      }
+
+      if (match?.length) return match[1]
+      else return ''
+    } catch (error) {
+      return ''
     }
-  }
+  })
+
+  // execute all requests for getting the titles
+  const titles: Array<string> = await Promise.all(requestPromises)
 
   return titles
 }
@@ -46,21 +52,20 @@ export async function returnSiteTitles() {
 export function findTagCounts(localData: Array<SampleDateRecord>): Array<TagCounts> {
   const tagCounts: Array<TagCounts> = []
 
-  for (let i = 0; i < localData.length; i++) {
-    const tags = localData[i].tags
-
-    for (let j = 0; j < tags.length; j++) {
-      const tag = tags[j]
-
-      for (let k = 0; k < tagCounts.length; k++) {
-        if (tagCounts[k].tag === tag) {
-          tagCounts[k].count++
-        } else {
-          tagCounts.push({ tag, count: 1 })
-        }
+  localData.forEach(data => {
+    const tags = data.tags ?? [] // data.tags ? data.tags : []
+    tags.forEach(tag => {
+      // find the index of existing tag on tagCounts variable
+      const index = tagCounts.findIndex(tagCount => tagCount.tag === tag)
+      if (index != -1) {
+        // in finding
+        tagCounts[index].count++
+      } else {
+        // in not finding
+        tagCounts.push({ tag: tag, count: 1 })
       }
-    }
-  }
+    })
+  })
 
   return tagCounts
 }
@@ -78,6 +83,22 @@ export function findTagCounts(localData: Array<SampleDateRecord>): Array<TagCoun
  *  - if the imported item is on the "category exceptions" list, then no tax rate applies
  */
 export function calcualteImportCost(importedItems: Array<ImportedItem>): Array<ImportCostOutput> {
-  // please write your code in here.
-  // note that `taxRate` has already been imported for you
+  // function that gets taxRate by country destination and category
+  const getTaxRatebyCountryAndCategory = (countryDestination: string, category: string) => {
+    const taxRate = taxRates.find(tr => tr.country === countryDestination)
+    // if the imported item is on the "category exceptions" list, then no tax rate applies
+    return taxRate ? (taxRate.categoryExceptions.find(ce => ce === category) ? 0 : taxRate.importTaxRate) : 0
+  }
+
+  const totalCostResult = importedItems.map(
+    ({ name, unitPrice, quantity, countryDestination, category }): ImportCostOutput => {
+      // calculate some values by some useful formulas and infomration
+      const subTotal = unitPrice * quantity
+      const importCost = subTotal * getTaxRatebyCountryAndCategory(countryDestination, category)
+      const totalCost = subTotal + importCost
+      return { name: name, subtotal: subTotal, importCost: importCost, totalCost: totalCost }
+    }
+  )
+
+  return totalCostResult
 }
